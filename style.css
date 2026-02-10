@@ -1,0 +1,22 @@
+body { font-family: -apple-system, sans-serif; background: #f4f4f4; color: #333; margin: 0; padding: 20px; }
+.container { max-width: 900px; margin: 0 auto; }
+.card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; position: relative; }
+
+/* Search/Dropdown */
+#searchBar { width: 100%; padding: 12px; font-size: 16px; border: 2px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+.dropdown-list { position: absolute; width: calc(100% - 40px); background: white; border: 1px solid #ccc; max-height: 200px; overflow-y: auto; z-index: 10; display: none; }
+.dropdown-item { padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; }
+.dropdown-item:hover { background: #f0f7ff; }
+
+/* Selection Banner */
+.selection-banner { background: #2c3e50; color: white; padding: 15px; border-radius: 4px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+#rangeInfo { font-size: 0.9rem; color: #ecf0f1; }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; background: white; margin-bottom: 30px; }
+th { background: #eee; text-align: left; padding: 12px; border-bottom: 2px solid #ddd; }
+td { padding: 10px; border-bottom: 1px solid #eee; }
+tr:hover { background-color: #fafafa; }
+
+.match-row { background-color: #e8f5e9 !important; font-weight: bold; }
+.tag { font-size: 0.8rem; padding: 2px 6px; border-radius: 4px; background: #ddd; }
