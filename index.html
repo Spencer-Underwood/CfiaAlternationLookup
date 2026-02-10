@@ -3,12 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CFIA Alternation Tool</title>
+    <title>CFIA Alternation Lookup</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>CFIA Alternation Finder 2025</h1>
+        <h1>CFIA Alternation Lookup 2025</h1>
+
+    <div class="card rule-blurb">
+        <h3>Appendix B (Employment Transition Policy) - Article 6.3: Alternation</h3>
+        <p> Per <strong>Article 6.3.7</strong>, an alternation can occur when positions are considered
+            <strong>equivalent</strong>. This is defined as a situation where the maximum rate of pay
+            for the higher-paid position is no more than <strong>six percent (6%) higher</strong>
+            than the maximum rate of pay for the lower-paid position.
+        </p>
+    </div>
 
         <div class="card search-box">
             <label for="searchBar">Search your Classification:</label>
@@ -22,7 +31,7 @@
                 <div id="rangeInfo"></div>
             </div>
 
-            <h3>Valid Alternation Matches</h3>
+            <h3>Valid Alternation Matches (Equivalents)</h3>
             <table id="resultsTable">
                 <thead>
                     <tr>
@@ -50,11 +59,11 @@
             </thead>
             <tbody id="masterBody"></tbody>
         </table>
+
+        <footer class="tool-footer">
+            <p>Based on current PIPSC and PSAC collective agreements. Built with a bit of help from AI.</p>
+        </footer>
     </div>
-    <footer class="tool-footer">
-        <p>Data based on the most recent (2025-02-09) Collective Agreements for PIPSC and PSAC at CFIA.</p>
-        <p style="font-size: 0.75rem; opacity: 0.7;"> Developed with AI assistance to support CFIA staff. </p>
-    </footer>
     <script src="script.js"></script>
 </body>
 </html>

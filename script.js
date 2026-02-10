@@ -71,7 +71,11 @@ document.addEventListener('click', (e) => {
         searchBar.value = pos.id;
         dropdown.style.display = "none";
 
-        const min = pos.salary * 0.94;
+        // ARTICLE 6.3.7 MATH
+        // Higher cannot be > 106% of Lower.
+        // 1. If YOU are the lower position: Max = YourSalary * 1.06
+        // 2. If YOU are the higher position: Min = YourSalary / 1.06
+        const min = pos.salary / 1.06;
         const max = pos.salary * 1.06;
 
         document.getElementById('selectedName').textContent = `${pos.id} ($${pos.salary.toLocaleString()})`;
