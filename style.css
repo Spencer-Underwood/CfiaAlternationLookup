@@ -18,6 +18,10 @@ th { background: #eee; text-align: left; padding: 12px; border-bottom: 2px solid
 td { padding: 10px; border-bottom: 1px solid #eee; }
 tr:hover { background-color: #fafafa; }
 
+/* Highlight the role you actually selected */
+.selected-row { background-color: #e8f4fd !important; border-left: 5px solid #2196f3; font-weight: bold; }
+#masterTable tbody tr { cursor: pointer; transition: background-color 0.2s;}
+#masterTable tbody tr:hover { background-color: #f1f1f1; /* Subtle highlight on hover */ }
 .match-row { background-color: #e8f5e9 !important; font-weight: bold; }
 .tag { font-size: 0.8rem; padding: 2px 6px; border-radius: 4px; background: #ddd; }
 

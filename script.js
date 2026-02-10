@@ -27,6 +27,7 @@ const rawData = {
     }
 };
 
+// Flatten data
 const flatData = [];
 for (let union in rawData) {
     for (let group in rawData[union]) {
@@ -36,63 +37,77 @@ for (let union in rawData) {
     }
 }
 
+// Selectors
 const searchBar = document.getElementById('searchBar');
 const dropdown = document.getElementById('dropdownResults');
-const masterBody = document.getElementById('masterBody');
-const resultsBody = document.getElementById('resultsBody');
 const resultsWrapper = document.getElementById('resultsWrapper');
+const resultsBody = document.getElementById('resultsBody');
+const masterBody = document.getElementById('masterBody');
 
+// Table rendering helper
 function renderTableRows(data, selectedId = null) {
-    return data.map(p => `
-        <tr id="${p.id === selectedId ? 'selected-row-anchor' : ''}" class="${p.id === selectedId ? 'match-row' : ''}">
-            <td>${p.id}</td>
-            <td><span class="tag">${p.union}</span></td>
-            <td>${p.group}</td>
-            <td>$${p.salary.toLocaleString()}</td>
+    return data.map(item => `
+        <tr class="${item.id === selectedId ? 'selected-row' : ''}">
+            <td>${item.id}</td>
+            <td>${item.union}</td>
+            <td>${item.group}</td>
+            <td>$${item.salary.toLocaleString()}</td>
         </tr>
     `).join('');
 }
 
-// Master table stays in JSON order
+// Initial render of the reference table
 masterBody.innerHTML = renderTableRows(flatData);
 
-searchBar.addEventListener('input', (e) => {
-    const term = e.target.value.toUpperCase();
-    if (!term) { dropdown.style.display = "none"; return; }
-    const matches = flatData.filter(p => p.id.includes(term));
-    dropdown.innerHTML = matches.map(m => `<div class="dropdown-item" data-id="${m.id}">${m.id} ($${m.salary.toLocaleString()})</div>`).join('');
-    dropdown.style.display = matches.length ? "block" : "none";
+function updateResults(pos) {
+    const min = pos.salary / 1.06;
+    const max = pos.salary * 1.06;
+
+    document.getElementById('selectedName').textContent = `${pos.id} ($${pos.salary.toLocaleString()})`;
+    document.getElementById('rangeInfo').innerHTML = `<strong>ETP Range:</strong> $${Math.round(min).toLocaleString()} - $${Math.round(max).toLocaleString()}`;
+
+    const matches = flatData
+        .filter(p => p.salary >= min && p.salary <= max)
+        .sort((a, b) => a.salary - b.salary);
+
+    resultsBody.innerHTML = renderTableRows(matches, pos.id);
+    resultsWrapper.style.display = "block";
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Search Logic
+searchBar.addEventListener('input', () => {
+    const val = searchBar.value.toLowerCase();
+    if (val.length < 1) { dropdown.style.display = "none"; return; }
+
+    const filtered = flatData.filter(p => p.id.toLowerCase().includes(val)).slice(0, 10);
+
+    if (filtered.length > 0) {
+        dropdown.innerHTML = filtered.map(p => `<div class="dropdown-item" data-id="${p.id}">${p.id}</div>`).join('');
+        dropdown.style.display = "block";
+    } else {
+        dropdown.style.display = "none";
+    }
 });
 
+// Click Handlers
 document.addEventListener('click', (e) => {
+    // Dropdown selection
     if (e.target.classList.contains('dropdown-item')) {
         const posId = e.target.getAttribute('data-id');
         const pos = flatData.find(p => p.id === posId);
         searchBar.value = pos.id;
         dropdown.style.display = "none";
-
-        // ARTICLE 6.3.7 MATH
-        // Higher cannot be > 106% of Lower.
-        // 1. If YOU are the lower position: Max = YourSalary * 1.06
-        // 2. If YOU are the higher position: Min = YourSalary / 1.06
-        const min = pos.salary / 1.06;
-        const max = pos.salary * 1.06;
-
-        document.getElementById('selectedName').textContent = `${pos.id} ($${pos.salary.toLocaleString()})`;
-        document.getElementById('rangeInfo').innerHTML = `Equivalence Range (±6%): $${Math.round(min).toLocaleString()} - $${Math.round(max).toLocaleString()}`;
-
-        // RESULTS SORTING: Sort by salary ascending (lowest at top, highest at bottom)
-        const matches = flatData
-            .filter(p => p.salary >= min && p.salary <= max)
-            .sort((a, b) => a.salary - b.salary);
-
-        resultsBody.innerHTML = renderTableRows(matches, pos.id);
-        resultsWrapper.style.display = "block";
-
-        // Auto-scroll to the highlighted position so it's "centered" in the view
-        const anchor = document.getElementById('selected-row-anchor');
-        if (anchor) {
-            anchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        updateResults(pos);
+    }
+    // Master table row selection (Duddles' request)
+    else if (e.target.closest('#masterBody tr')) {
+        const row = e.target.closest('tr');
+        const posId = row.cells[0].textContent.trim();
+        const pos = flatData.find(p => p.id === posId);
+        if (pos) {
+            searchBar.value = pos.id;
+            updateResults(pos);
         }
     } else {
         dropdown.style.display = "none";
